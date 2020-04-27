@@ -6,6 +6,7 @@ pool:
 
 steps:
 - task: Bash@3
+  displayName: Running tests, downloading test result
   inputs:
     targetType: 'inline'
     script: 'curl --output $(System.DefaultWorkingDirectory)/testresult.xml "https://9d42c070.ngrok.io/api/triggerbuild/LUIS-Incomprehension?APIKEY=0XwFIzqtJJTmCFCMx6Z9&BUILDID=${BUILD_ID}&WAIT=1&REPORTER=junit"'
@@ -13,11 +14,13 @@ steps:
     BUILD_ID: $(Build.BuildNumber)
 
 - task: PublishPipelineArtifact@1
+  displayName: Publish test result as artifact
   inputs:
-    path: $(System.DefaultWorkingDirectory)/testresult.pdf
+    path: $(System.DefaultWorkingDirectory)/testresult.xml
     artifact: Test Result (PDF)
 
 - task: Bash@3
+  displayName: Downloading transcript
   inputs:
     targetType: 'inline'
     script: 'curl --output $(System.DefaultWorkingDirectory)/transcript.csv "https://9d42c070.ngrok.io/api/transcript/$BUILD_ID?APIKEY=0XwFIzqtJJTmCFCMx6Z9&REPORTER=csv"'
@@ -25,11 +28,13 @@ steps:
     BUILD_ID: $(Build.BuildNumber)
 
 - task: PublishPipelineArtifact@1
+  displayName: Publish transript as artifact
   inputs:
     path: $(System.DefaultWorkingDirectory)/transcript.csv
     artifact: Transcript (CSV)
 
 - task: PublishTestResults@2
+  displayName: Publish test results, check failed status
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '$(System.DefaultWorkingDirectory)/testresult.xml'
