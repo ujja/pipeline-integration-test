@@ -28,5 +28,5 @@ steps:
 
 - task: PublishPipelineArtifact@1
   inputs:
-    path: transcript.pdf
-    artifact: Transcript (PDF)
+    path: transcript.csv
+    artifact: Transcript (CSV)
