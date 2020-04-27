@@ -8,7 +8,7 @@ steps:
 - task: Bash@3
   inputs:
     targetType: 'inline'
-    script: 'curl --output $(System.DefaultWorkingDirectory)/testresult.xml "https://9d42c070.ngrok.io/api/triggerbuild/LUIS-Incomprehension?APIKEY=0XwFIzqtJJTmCFCMx6Z9&BUILDID=MyBotName-${BUILD_NUMBER}&WAIT=1&REPORTER=junit"'
+    script: 'curl --output $(System.DefaultWorkingDirectory)/testresult.xml "https://9d42c070.ngrok.io/api/triggerbuild/LUIS-Incomprehension?APIKEY=0XwFIzqtJJTmCFCMx6Z9&BUILDID=MyBotName-${BUILD_ID}&WAIT=1&REPORTER=junit"'
   env:
     BUILD_ID: $(Build.BuildNumber)
 
