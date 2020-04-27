@@ -17,7 +17,7 @@ steps:
   displayName: Publish test result as artifact
   inputs:
     path: $(System.DefaultWorkingDirectory)/testresult.xml
-    artifact: Test Result (PDF)
+    artifact: Test Result (XML)
 
 - task: Bash@3
   displayName: Downloading transcript
