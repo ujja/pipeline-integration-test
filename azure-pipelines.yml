@@ -1,0 +1,20 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'curl --output testresult.xml "https://box.botium.at/api/triggerbuild/Echo-Bot-Test-Suite?APIKEY=yyyy&BUILDID=$BUILD_ID&WAIT=1&TAG=AzureDevOps&REPORTER=junit"'
+  env:
+    BUILD_ID: $(Build.BuildNumber)
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: 'testresult.xml'
+    mergeTestResults: true
+    failTaskOnFailedTests: true
