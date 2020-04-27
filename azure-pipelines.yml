@@ -12,21 +12,26 @@ steps:
   env:
     BUILD_ID: $(Build.BuildNumber)
 
+- task: PublishPipelineArtifact@1
+  inputs:
+    path: $(System.DefaultWorkingDirectory)/testresult.pdf
+    artifact: Test Result (PDF)
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'curl --output $(System.DefaultWorkingDirectory)/transcript.csv "https://9d42c070.ngrok.io/api/transcript/$BUILD_ID?APIKEY=0XwFIzqtJJTmCFCMx6Z9&REPORTER=csv"'
+  env:
+    BUILD_ID: $(Build.BuildNumber)
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    path: $(System.DefaultWorkingDirectory)/transcript.csv
+    artifact: Transcript (CSV)
+
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '$(System.DefaultWorkingDirectory)/testresult.xml'
     mergeTestResults: true
     failTaskOnFailedTests: true
-    
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'curl --output transcript.csv "https://9d42c070.ngrok.io/api/transcript/$BUILD_ID?APIKEY=0XwFIzqtJJTmCFCMx6Z9&REPORTER=csv"'
-  env:
-    BUILD_ID: $(Build.BuildNumber)
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    path: transcript.csv
-    artifact: Transcript (CSV)
