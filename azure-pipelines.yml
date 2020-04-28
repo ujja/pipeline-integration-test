@@ -33,23 +33,19 @@ steps:
     path: $(System.DefaultWorkingDirectory)/transcript.csv
     artifact: Transcript (CSV)
 
-
-- task: PublishPipelineArtifact@1
-  displayName: Publish test result as artifact
-- task: SendEmail@1
+- task: EmailReport@1
   inputs:
-    To: 'attila1974hu@gmail.com'
-    From: 'attila1974hu@gmail.com'
-    Subject: 'test'
-    Body: 'Here is your result'
-    BodyAsHtml: false
-    AddAttachment: true
-    Attachment: '$(System.DefaultWorkingDirectory)/testresult.xml'
-    SmtpServer: 'email-smtp.eu-west-1.amazonaws.com'
-    SmtpPort: '465'
-    SmtpUsername: 'AKIA2AFWMKTONYCE6FEJ'
-    SmtpPassword: 'BLxuCXEiVK8bChGunl64drkDJ1iONaTjsDgA4sXJNJ+s'
-
+    sendMailConditionConfig: 'Always'
+    subject: '[{environmentStatus}] {passPercentage} tests passed in $(Release.EnvironmentName) stage for $(Build.BuildNumber)'
+    toAddress: 'attila1974hu@gmail.com'
+    defaultDomain: 'microsoft.com'
+    includeResultsStr: '1, 2'
+    groupTestResultsBy: 'run'
+    includeCommits: true
+    maxTestFailuresToShow: '15'
+    includeOthersInTotal: false
+    usePreviousEnvironment: false
+    smtpConnectionEndpoint: 'Botium SMTP server'
 
 - task: PublishTestResults@2
   displayName: Publish test results, check failed status
