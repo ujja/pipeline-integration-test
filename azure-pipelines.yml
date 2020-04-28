@@ -9,7 +9,7 @@ steps:
   displayName: Running tests, downloading test result
   inputs:
     targetType: 'inline'
-    script: 'curl --output $(System.DefaultWorkingDirectory)/testresult.xml "https://9d42c070.ngrok.io/api/triggerbuild/LUIS-Incomprehension?APIKEY=0XwFIzqtJJTmCFCMx6Z9&BUILDID=${BUILD_ID}&WAIT=1&REPORTER=junit"'
+    script: 'curl --output $(System.DefaultWorkingDirectory)/testresult.xml "https://e6588263.ngrok.io/api/triggerbuild/LUIS-Incomprehension?APIKEY=0XwFIzqtJJTmCFCMx6Z9&BUILDID=${BUILD_ID}&WAIT=1&REPORTER=junit"'
   env:
     BUILD_ID: $(Build.BuildNumber)
 
@@ -23,7 +23,7 @@ steps:
   displayName: Downloading transcript
   inputs:
     targetType: 'inline'
-    script: 'curl --output $(System.DefaultWorkingDirectory)/transcript.csv "https://9d42c070.ngrok.io/api/transcript/$BUILD_ID?APIKEY=0XwFIzqtJJTmCFCMx6Z9&REPORTER=csv"'
+    script: 'curl --output $(System.DefaultWorkingDirectory)/transcript.csv "https://e6588263.ngrok.io/api/transcript/$BUILD_ID?APIKEY=0XwFIzqtJJTmCFCMx6Z9&REPORTER=csv"'
   env:
     BUILD_ID: $(Build.BuildNumber)
 
@@ -33,6 +33,24 @@ steps:
     path: $(System.DefaultWorkingDirectory)/transcript.csv
     artifact: Transcript (CSV)
 
+
+- task: PublishPipelineArtifact@1
+  displayName: Publish test result as artifact
+- task: SendEmail@1
+  inputs:
+    To: 'attila1974hu@gmail.com'
+    From: 'attila1974hu@gmail.com'
+    Subject: 'test'
+    Body: 'Here is your result'
+    BodyAsHtml: false
+    AddAttachment: true
+    Attachment: '$(System.DefaultWorkingDirectory)/testresult.xml'
+    SmtpServer: 'email-smtp.eu-west-1.amazonaws.com'
+    SmtpPort: '465'
+    SmtpUsername: 'AKIA2AFWMKTONYCE6FEJ'
+    SmtpPassword: 'BLxuCXEiVK8bChGunl64drkDJ1iONaTjsDgA4sXJNJ+s'
+
+
 - task: PublishTestResults@2
   displayName: Publish test results, check failed status
   inputs:
@@ -40,3 +58,4 @@ steps:
     testResultsFiles: '$(System.DefaultWorkingDirectory)/testresult.xml'
     mergeTestResults: true
     failTaskOnFailedTests: true
+
